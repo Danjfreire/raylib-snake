@@ -235,12 +235,12 @@ void SpawnFood()
 void HandleCollision()
 {
 	// collision with wall
-	if (snake[0].position.x > SCREEN_WIDTH || snake[0].position.x < 0) // if hit side wall
+	if (snake[0].position.x + SQUARE_SIZE > SCREEN_WIDTH || snake[0].position.x < 0) // if hit side wall
 	{
 		printf("hit side wall\n");
 		isGameOver = true;
 	}
-	if (snake[0].position.y > SCREEN_HEIGHT || snake[0].position.y < 0) // if hit upper/lower wall
+	if (snake[0].position.y + SQUARE_SIZE > SCREEN_HEIGHT || snake[0].position.y < 0) // if hit upper/lower wall
 	{
 		isGameOver = true;
 	}
