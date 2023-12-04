@@ -29,7 +29,6 @@ Food fruit = { 0 };
 Snake snake[MAX_SNAKE_LENGTH] = { 0 };
 Vector2 snakePreviousPosition[MAX_SNAKE_LENGTH] = { 0 };
 int snakeLength = 0;
-//Vector2 offset = { 0 };
 
 int frameCounter = 0;
 
@@ -61,10 +60,6 @@ int main(void)
 void InitGame()
 {
 	isGameOver = false;
-
-	// init snake
-	/*offset.x = SCREEN_WIDTH % SQUARE_SIZE;
-	offset.y = SCREEN_HEIGHT % SQUARE_SIZE;*/
 
 	snakeLength = 1;
 
@@ -237,7 +232,6 @@ void HandleCollision()
 	// collision with wall
 	if (snake[0].position.x + SQUARE_SIZE > SCREEN_WIDTH || snake[0].position.x < 0) // if hit side wall
 	{
-		printf("hit side wall\n");
 		isGameOver = true;
 	}
 	if (snake[0].position.y + SQUARE_SIZE > SCREEN_HEIGHT || snake[0].position.y < 0) // if hit upper/lower wall
