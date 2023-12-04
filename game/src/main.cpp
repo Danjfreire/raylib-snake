@@ -121,7 +121,7 @@ void DrawGame()
 	}
 
 	// draw snake
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < snakeLength; i++)
 	{
 		DrawRectangle(
 			snake[i].position.x,
@@ -223,11 +223,11 @@ void SpawnFood()
 	}
 
 	fruit.position = {
-		float(GetRandomValue(0, (SCREEN_WIDTH / SQUARE_SIZE)) * SQUARE_SIZE),
-		float(GetRandomValue(0, (SCREEN_HEIGHT / SQUARE_SIZE)) * SQUARE_SIZE)
+		float(GetRandomValue(0, ((SCREEN_WIDTH-SQUARE_SIZE) / SQUARE_SIZE)) * SQUARE_SIZE),
+		float(GetRandomValue(0, ((SCREEN_HEIGHT-SQUARE_SIZE) / SQUARE_SIZE)) * SQUARE_SIZE)
 	};
 
-	//std::cout << "Fruit position : {" << fruit.position.x << ", " << fruit.position.y << "}\n";
+	std::cout << "Fruit position : {" << fruit.position.x << ", " << fruit.position.y << "}\n";
 
 	shouldSpawnFood = false;
 }
@@ -237,7 +237,7 @@ void HandleCollision()
 	// collision with wall
 	if (snake[0].position.x > SCREEN_WIDTH || snake[0].position.x < 0) // if hit side wall
 	{
-		printf("hit side wall");
+		printf("hit side wall\n");
 		isGameOver = true;
 	}
 	if (snake[0].position.y > SCREEN_HEIGHT || snake[0].position.y < 0) // if hit upper/lower wall
@@ -247,4 +247,14 @@ void HandleCollision()
 	// collision with self
 
 	// collision with food
+	if (
+		(snake[0].position.x < (fruit.position.x + fruit.size.x) && // 
+		(snake[0].position.x + snake[0].size.x) > fruit.position.x) &&
+		(snake[0].position.y < (fruit.position.y + fruit.size.y) && 
+		(snake[0].position.y + snake[0].size.y) > fruit.position.y)
+		)
+	{
+		snakeLength++;
+		shouldSpawnFood = true;
+	}
 }
