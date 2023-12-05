@@ -1,10 +1,8 @@
 #include "raylib.h"
-#include "iostream"
 
 struct Snake
 {
 	Vector2 position;
-	Vector2 size;
 	Vector2 speed;
 	Color color;
 };
@@ -12,7 +10,6 @@ struct Snake
 struct Food
 {
 	Vector2 position;
-	Vector2 size;
 	Color color;
 };
 
@@ -66,7 +63,6 @@ void InitGame()
 	for (int i = 0; i < MAX_SNAKE_LENGTH; i++)
 	{
 		snake[i].position = { SQUARE_SIZE , SQUARE_SIZE };
-		snake[i].size = { SQUARE_SIZE, SQUARE_SIZE };
 		snake[i].speed = { SQUARE_SIZE, 0 };
 
 		if (i == 0) // snake head
@@ -84,7 +80,6 @@ void InitGame()
 		snakePreviousPosition[i] = { 0.0f, 0.0f };
 	}
 
-	fruit.size = { SQUARE_SIZE, SQUARE_SIZE };
 	fruit.color = RED;
 
 	shouldSpawnFood = true;
@@ -160,14 +155,13 @@ void UpdateGame()
 {
 	if (isGameOver)
 	{
-		// handle game over
 		return;
 	}
 
 	HandleCollision();
+	SpawnFood();
 	HandleInput();
 	UpdateSnake();
-	SpawnFood();
 }
 
 void UpdateSnake()
@@ -230,7 +224,6 @@ void SpawnFood()
 			float(GetRandomValue(0, ((SCREEN_HEIGHT - SQUARE_SIZE) / SQUARE_SIZE)) * SQUARE_SIZE)
 		};
 
-		std::cout << "Fruit position : {" << fruit.position.x << ", " << fruit.position.y << "}\n";
 		shouldSpawnFood = false;
 
 		for (int i = 0; i < snakeLength; i++)
@@ -255,6 +248,7 @@ void HandleCollision()
 	{
 		isGameOver = true;
 	}
+
 	// collision with self
 	for (int i = 1; i < snakeLength; i++)
 	{
@@ -265,16 +259,15 @@ void HandleCollision()
 		}
 	}
 
-
 	// collision with food
 	if (
-		(snake[0].position.x < (fruit.position.x + fruit.size.x) && // 
-			(snake[0].position.x + snake[0].size.x) > fruit.position.x) &&
-		(snake[0].position.y < (fruit.position.y + fruit.size.y) &&
-			(snake[0].position.y + snake[0].size.y) > fruit.position.y)
+		(snake[0].position.x < (fruit.position.x + SQUARE_SIZE) && // 
+			(snake[0].position.x + SQUARE_SIZE) > fruit.position.x) &&
+		(snake[0].position.y < (fruit.position.y + SQUARE_SIZE) &&
+			(snake[0].position.y + SQUARE_SIZE) > fruit.position.y)
 		)
 	{
-		//snakePreviousPosition[snakeLength] = snake[0].position;
+		snake[snakeLength].position = snakePreviousPosition[snakeLength - 1];
 		snakeLength++;
 		shouldSpawnFood = true;
 	}
