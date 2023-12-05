@@ -16,9 +16,11 @@ struct Food
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-const Color snakeColor = GetColor(0x080002ff);
+const Color SNAKE_COLOR = GetColor(0x080002ff);
+const Color BACKGROUND_COLOR = GetColor(0x9ACC99ff);
 
 const int SQUARE_SIZE = 16;
+const float SQUARE_OFFSET = 1.0f;
 const int MAX_SNAKE_LENGTH = 100;
 
 bool isGameOver;
@@ -69,11 +71,11 @@ void InitGame()
 
 		if (i == 0) // snake head
 		{
-			snake[i].color = snakeColor;
+			snake[i].color = SNAKE_COLOR;
 		}
 		else // snake body
 		{
-			snake[i].color = snakeColor;
+			snake[i].color = SNAKE_COLOR;
 		}
 	}
 
@@ -104,7 +106,7 @@ void DrawGame()
 {
 	BeginDrawing();
 
-	ClearBackground(GetColor(0x9ACC99ff));
+	ClearBackground(BACKGROUND_COLOR);
 
 	// draw snake
 	for (int i = 0; i < snakeLength; i++)
@@ -115,6 +117,13 @@ void DrawGame()
 			SQUARE_SIZE,
 			SQUARE_SIZE,
 			snake[i].color
+		);
+		DrawRectangleLines(
+			snake[i].position.x,
+			snake[i].position.y,
+			SQUARE_SIZE,
+			SQUARE_SIZE,
+			BACKGROUND_COLOR
 		);
 	}
 
