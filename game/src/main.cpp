@@ -106,18 +106,6 @@ void DrawGame()
 
 	ClearBackground(GetColor(0x9ACC99ff));
 
-	// draw grid - vertical
-	/*for (int i = 0; i < SCREEN_WIDTH / SQUARE_SIZE; i++)
-	{
-		DrawLineV({ float(SQUARE_SIZE * i), 0 }, { float(SQUARE_SIZE * i), SCREEN_HEIGHT }, LIGHTGRAY);
-	}*/
-
-	// draw grid - horizontal
-	/*for (int i = 0; i < SCREEN_HEIGHT / SQUARE_SIZE; i++)
-	{
-		DrawLineV({ 0, float(SQUARE_SIZE * i) }, { SCREEN_WIDTH, float(SQUARE_SIZE * i) }, LIGHTGRAY);
-	}*/
-
 	// draw snake
 	for (int i = 0; i < snakeLength; i++)
 	{
