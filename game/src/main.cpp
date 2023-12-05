@@ -16,7 +16,9 @@ struct Food
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-const int SQUARE_SIZE = 32;
+const Color snakeColor = GetColor(0x080002ff);
+
+const int SQUARE_SIZE = 16;
 const int MAX_SNAKE_LENGTH = 100;
 
 bool isGameOver;
@@ -67,11 +69,11 @@ void InitGame()
 
 		if (i == 0) // snake head
 		{
-			snake[i].color = DARKBLUE;
+			snake[i].color = snakeColor;
 		}
 		else // snake body
 		{
-			snake[i].color = BLUE;
+			snake[i].color = snakeColor;
 		}
 	}
 
@@ -80,7 +82,7 @@ void InitGame()
 		snakePreviousPosition[i] = { 0.0f, 0.0f };
 	}
 
-	fruit.color = RED;
+	fruit.color = BLACK;
 
 	shouldSpawnFood = true;
 }
@@ -102,19 +104,19 @@ void DrawGame()
 {
 	BeginDrawing();
 
-	ClearBackground(RAYWHITE);
+	ClearBackground(GetColor(0x9ACC99ff));
 
 	// draw grid - vertical
-	for (int i = 0; i < SCREEN_WIDTH / SQUARE_SIZE; i++)
+	/*for (int i = 0; i < SCREEN_WIDTH / SQUARE_SIZE; i++)
 	{
 		DrawLineV({ float(SQUARE_SIZE * i), 0 }, { float(SQUARE_SIZE * i), SCREEN_HEIGHT }, LIGHTGRAY);
-	}
+	}*/
 
 	// draw grid - horizontal
-	for (int i = 0; i < SCREEN_HEIGHT / SQUARE_SIZE; i++)
+	/*for (int i = 0; i < SCREEN_HEIGHT / SQUARE_SIZE; i++)
 	{
 		DrawLineV({ 0, float(SQUARE_SIZE * i) }, { SCREEN_WIDTH, float(SQUARE_SIZE * i) }, LIGHTGRAY);
-	}
+	}*/
 
 	// draw snake
 	for (int i = 0; i < snakeLength; i++)
@@ -129,11 +131,10 @@ void DrawGame()
 	}
 
 	// draw food
-	DrawRectangle(
-		fruit.position.x,
-		fruit.position.y,
-		SQUARE_SIZE,
-		SQUARE_SIZE,
+	DrawCircle(
+		fruit.position.x + SQUARE_SIZE / 2, 
+		fruit.position.y + SQUARE_SIZE / 2, 
+		SQUARE_SIZE / 2, 
 		fruit.color
 	);
 
