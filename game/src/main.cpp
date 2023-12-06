@@ -23,6 +23,7 @@ const int TARGET_FPS = 60;
 const Color SNAKE_COLOR = GetColor(0x080002ff);
 const Color BACKGROUND_COLOR = GetColor(0x9ACC99ff);
 const int SQUARE_SIZE = 16;
+const int WALL_OFFSET = 16;
 const int DEFAULT_FONT_SIZE = 24;
 const int MAX_SNAKE_LENGTH = 100;
 const char* GAME_OVER_TEXT = "Game Over";
@@ -118,6 +119,15 @@ void DrawGame()
 	}
 	else
 	{
+		// draw walls
+		DrawRectangleLines(
+			WALL_OFFSET,
+			WALL_OFFSET,
+			SCREEN_WIDTH - (2 * WALL_OFFSET),
+			SCREEN_HEIGHT - (2 * WALL_OFFSET),
+			SNAKE_COLOR
+		);
+
 		// draw snake
 		for (int i = 0; i < snakeLength; i++)
 		{
@@ -223,8 +233,8 @@ void SpawnFood()
 	while (shouldSpawnFood)
 	{
 		fruit.position = {
-			float(GetRandomValue(0, ((SCREEN_WIDTH - SQUARE_SIZE) / SQUARE_SIZE)) * SQUARE_SIZE),
-			float(GetRandomValue(0, ((SCREEN_HEIGHT - SQUARE_SIZE) / SQUARE_SIZE)) * SQUARE_SIZE)
+			float(GetRandomValue(0, ((SCREEN_WIDTH - SQUARE_SIZE - 2 * WALL_OFFSET) / SQUARE_SIZE)) * SQUARE_SIZE),
+			float(GetRandomValue(0, ((SCREEN_HEIGHT - SQUARE_SIZE - 2 * WALL_OFFSET) / SQUARE_SIZE)) * SQUARE_SIZE)
 		};
 
 		shouldSpawnFood = false;
@@ -243,11 +253,11 @@ void SpawnFood()
 void HandleCollision()
 {
 	// collision with wall
-	if (snake[0].position.x + SQUARE_SIZE > SCREEN_WIDTH || snake[0].position.x < 0) // if hit side wall
+	if (snake[0].position.x + SQUARE_SIZE > SCREEN_WIDTH - WALL_OFFSET || snake[0].position.x < WALL_OFFSET) // if hit side wall
 	{
 		isGameOver = true;
 	}
-	if (snake[0].position.y + SQUARE_SIZE > SCREEN_HEIGHT || snake[0].position.y < 0) // if hit upper/lower wall
+	if (snake[0].position.y + SQUARE_SIZE > SCREEN_HEIGHT - WALL_OFFSET || snake[0].position.y < WALL_OFFSET) // if hit upper/lower wall
 	{
 		isGameOver = true;
 	}
