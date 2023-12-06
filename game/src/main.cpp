@@ -16,17 +16,19 @@ struct Food
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+// game config 
 const Color SNAKE_COLOR = GetColor(0x080002ff);
 const Color BACKGROUND_COLOR = GetColor(0x9ACC99ff);
-
 const int SQUARE_SIZE = 16;
 const float SQUARE_OFFSET = 1.0f;
-const int MAX_SNAKE_LENGTH = 100;
+const int DEFAULT_FONT_SIZE = 24;
 
 bool isGameOver;
 bool shouldSpawnFood;
 
 Food fruit = { 0 };
+
+const int MAX_SNAKE_LENGTH = 100;
 Snake snake[MAX_SNAKE_LENGTH] = { 0 };
 Vector2 snakePreviousPosition[MAX_SNAKE_LENGTH] = { 0 };
 int snakeLength = 0;
@@ -36,7 +38,6 @@ int frameCounter = 0;
 void InitGame();
 void Tick();
 void DrawGame();
-void DrawGameOver();
 void UpdateGame();
 void UpdateSnake();
 void HandleInput();
@@ -69,14 +70,7 @@ void InitGame()
 		snake[i].position = { SQUARE_SIZE , SQUARE_SIZE };
 		snake[i].speed = { SQUARE_SIZE, 0 };
 
-		if (i == 0) // snake head
-		{
-			snake[i].color = SNAKE_COLOR;
-		}
-		else // snake body
-		{
-			snake[i].color = SNAKE_COLOR;
-		}
+		snake[i].color = SNAKE_COLOR;
 	}
 
 	for (int i = 0; i < MAX_SNAKE_LENGTH; i++)
@@ -91,15 +85,9 @@ void InitGame()
 
 void Tick()
 {
-	if (!isGameOver) {
-		UpdateGame();
-		DrawGame();
-		frameCounter++;
-	}
-	else
-	{
-		DrawGameOver();
-	}
+	UpdateGame();
+	DrawGame();
+	frameCounter++;
 }
 
 void DrawGame()
@@ -108,43 +96,44 @@ void DrawGame()
 
 	ClearBackground(BACKGROUND_COLOR);
 
-	// draw snake
-	for (int i = 0; i < snakeLength; i++)
+	if (isGameOver)
 	{
-		DrawRectangle(
-			snake[i].position.x,
-			snake[i].position.y,
-			SQUARE_SIZE,
-			SQUARE_SIZE,
-			snake[i].color
-		);
-		DrawRectangleLines(
-			snake[i].position.x,
-			snake[i].position.y,
-			SQUARE_SIZE,
-			SQUARE_SIZE,
-			BACKGROUND_COLOR
+		DrawText(
+			"Game Over",
+			SCREEN_WIDTH/2 - MeasureText("Game Over", DEFAULT_FONT_SIZE)/2,
+			SCREEN_HEIGHT/2, DEFAULT_FONT_SIZE,
+			SNAKE_COLOR
 		);
 	}
+	else
+	{
+		// draw snake
+		for (int i = 0; i < snakeLength; i++)
+		{
+			DrawRectangle(
+				snake[i].position.x,
+				snake[i].position.y,
+				SQUARE_SIZE,
+				SQUARE_SIZE,
+				snake[i].color
+			);
+			DrawRectangleLines(
+				snake[i].position.x,
+				snake[i].position.y,
+				SQUARE_SIZE,
+				SQUARE_SIZE,
+				BACKGROUND_COLOR
+			);
+		}
 
-	// draw food
-	DrawCircle(
-		fruit.position.x + SQUARE_SIZE / 2, 
-		fruit.position.y + SQUARE_SIZE / 2, 
-		SQUARE_SIZE / 2, 
-		fruit.color
-	);
-
-	EndDrawing();
-}
-
-void DrawGameOver()
-{
-	BeginDrawing();
-
-	ClearBackground(BLACK);
-
-	DrawText("Game Over", SCREEN_WIDTH / 2 - SQUARE_SIZE, SCREEN_HEIGHT / 2, 20, RED);
+		// draw food
+		DrawCircle(
+			fruit.position.x + SQUARE_SIZE / 2,
+			fruit.position.y + SQUARE_SIZE / 2,
+			SQUARE_SIZE / 2,
+			fruit.color
+		);
+	}
 
 	EndDrawing();
 }
