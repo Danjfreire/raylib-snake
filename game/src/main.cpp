@@ -1,5 +1,6 @@
 #include "raylib.h"
 
+// data types
 struct Snake
 {
 	Vector2 position;
@@ -13,22 +14,25 @@ struct Food
 	Color color;
 };
 
+// screen config
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+const int TARGET_FPS = 60;
 
 // game config 
 const Color SNAKE_COLOR = GetColor(0x080002ff);
 const Color BACKGROUND_COLOR = GetColor(0x9ACC99ff);
 const int SQUARE_SIZE = 16;
-const float SQUARE_OFFSET = 1.0f;
 const int DEFAULT_FONT_SIZE = 24;
+const int MAX_SNAKE_LENGTH = 100;
+const char* GAME_OVER_TEXT = "Game Over";
+const char* RESTART_GAME_TEXT = "Press R to restart";
 
+// game state
 bool isGameOver;
 bool shouldSpawnFood;
 
 Food fruit = { 0 };
-
-const int MAX_SNAKE_LENGTH = 100;
 Snake snake[MAX_SNAKE_LENGTH] = { 0 };
 Vector2 snakePreviousPosition[MAX_SNAKE_LENGTH] = { 0 };
 int snakeLength = 0;
@@ -47,7 +51,7 @@ void SpawnFood();
 int main(void)
 {
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake");
-	SetTargetFPS(60);
+	SetTargetFPS(TARGET_FPS);
 
 	InitGame();
 
@@ -99,9 +103,16 @@ void DrawGame()
 	if (isGameOver)
 	{
 		DrawText(
-			"Game Over",
-			SCREEN_WIDTH/2 - MeasureText("Game Over", DEFAULT_FONT_SIZE)/2,
-			SCREEN_HEIGHT/2, DEFAULT_FONT_SIZE,
+			GAME_OVER_TEXT,
+			SCREEN_WIDTH / 2 - MeasureText(GAME_OVER_TEXT, DEFAULT_FONT_SIZE) / 2,
+			SCREEN_HEIGHT / 2, DEFAULT_FONT_SIZE,
+			SNAKE_COLOR
+		);
+
+		DrawText(
+			RESTART_GAME_TEXT,
+			SCREEN_WIDTH / 2 - MeasureText(RESTART_GAME_TEXT, DEFAULT_FONT_SIZE) / 2,
+			SCREEN_HEIGHT / 2 + (2 * SQUARE_SIZE), DEFAULT_FONT_SIZE,
 			SNAKE_COLOR
 		);
 	}
@@ -140,11 +151,6 @@ void DrawGame()
 
 void UpdateGame()
 {
-	if (isGameOver)
-	{
-		return;
-	}
-
 	HandleCollision();
 	SpawnFood();
 	HandleInput();
@@ -179,21 +185,31 @@ void UpdateSnake()
 
 void HandleInput()
 {
-	if (IsKeyPressed(KEY_RIGHT) && snake[0].speed.x == 0)
+	if (isGameOver)
 	{
-		snake[0].speed = { SQUARE_SIZE, 0 };
+		if (IsKeyPressed(KEY_R))
+		{
+			InitGame();
+		}
 	}
-	if (IsKeyPressed(KEY_LEFT) && snake[0].speed.x == 0)
+	else
 	{
-		snake[0].speed = { -SQUARE_SIZE, 0 };
-	}
-	if (IsKeyPressed(KEY_DOWN) && snake[0].speed.y == 0)
-	{
-		snake[0].speed = { 0, SQUARE_SIZE };
-	}
-	if (IsKeyPressed(KEY_UP) && snake[0].speed.y == 0)
-	{
-		snake[0].speed = { 0, -SQUARE_SIZE };
+		if (IsKeyPressed(KEY_RIGHT) && snake[0].speed.x == 0)
+		{
+			snake[0].speed = { SQUARE_SIZE, 0 };
+		}
+		if (IsKeyPressed(KEY_LEFT) && snake[0].speed.x == 0)
+		{
+			snake[0].speed = { -SQUARE_SIZE, 0 };
+		}
+		if (IsKeyPressed(KEY_DOWN) && snake[0].speed.y == 0)
+		{
+			snake[0].speed = { 0, SQUARE_SIZE };
+		}
+		if (IsKeyPressed(KEY_UP) && snake[0].speed.y == 0)
+		{
+			snake[0].speed = { 0, -SQUARE_SIZE };
+		}
 	}
 }
 
