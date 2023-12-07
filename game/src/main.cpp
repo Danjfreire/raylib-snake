@@ -1,4 +1,6 @@
 #include "raylib.h"
+#include "string"
+#include "iostream"
 
 // data types
 struct Snake
@@ -32,13 +34,15 @@ const Vector2 SNAKE_STARTING_POSITION = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 };
 
 // game state
 bool isGameOver;
+int score;
+std::string scoreText;
 bool shouldSpawnFood;
 
 Food fruit = { 0 };
 Snake snake[MAX_SNAKE_LENGTH] = { 0 };
 Vector2 snakePreviousPosition[MAX_SNAKE_LENGTH] = { 0 };
 int snakeLength;
-bool canSnakeMove = false;
+bool canSnakeMove;
 
 int frameCounter = 0;
 
@@ -69,6 +73,7 @@ int main(void)
 void InitGame()
 {
 	isGameOver = false;
+	score = 0;
 	snakeLength = 3;
 	canSnakeMove = true;
 
@@ -114,12 +119,22 @@ void DrawGame()
 			SNAKE_COLOR
 		);
 
+		scoreText = "Score: " + std::to_string(score);
+
 		DrawText(
-			RESTART_GAME_TEXT,
-			SCREEN_WIDTH / 2 - MeasureText(RESTART_GAME_TEXT, DEFAULT_FONT_SIZE) / 2,
+			scoreText.c_str(),
+			SCREEN_WIDTH / 2 - MeasureText(scoreText.c_str(), DEFAULT_FONT_SIZE) / 2,
 			SCREEN_HEIGHT / 2 + (2 * SQUARE_SIZE), DEFAULT_FONT_SIZE,
 			SNAKE_COLOR
 		);
+
+		DrawText(
+			RESTART_GAME_TEXT,
+			SCREEN_WIDTH / 2 - MeasureText(RESTART_GAME_TEXT, DEFAULT_FONT_SIZE) / 2,
+			SCREEN_HEIGHT / 2 + (4 * SQUARE_SIZE), DEFAULT_FONT_SIZE,
+			SNAKE_COLOR
+		);
+		
 	}
 	else
 	{
@@ -295,6 +310,7 @@ void HandleCollision()
 	{
 		snake[snakeLength].position = snakePreviousPosition[snakeLength - 1];
 		snakeLength++;
+		score++;
 		shouldSpawnFood = true;
 	}
 }
