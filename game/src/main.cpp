@@ -25,9 +25,10 @@ const Color BACKGROUND_COLOR = GetColor(0x9ACC99ff);
 const int SQUARE_SIZE = 16;
 const int WALL_OFFSET = 16;
 const int DEFAULT_FONT_SIZE = 24;
-const int MAX_SNAKE_LENGTH = 100;
+const int MAX_SNAKE_LENGTH = 200;
 const char* GAME_OVER_TEXT = "Game Over";
 const char* RESTART_GAME_TEXT = "Press R to restart";
+const Vector2 SNAKE_STARTING_POSITION = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 };
 
 // game state
 bool isGameOver;
@@ -36,7 +37,8 @@ bool shouldSpawnFood;
 Food fruit = { 0 };
 Snake snake[MAX_SNAKE_LENGTH] = { 0 };
 Vector2 snakePreviousPosition[MAX_SNAKE_LENGTH] = { 0 };
-int snakeLength = 0;
+int snakeLength;
+bool canSnakeMove = false;
 
 int frameCounter = 0;
 
@@ -67,20 +69,22 @@ int main(void)
 void InitGame()
 {
 	isGameOver = false;
+	snakeLength = 3;
+	canSnakeMove = true;
 
-	snakeLength = 1;
-
+	// init snake arrays with default values
 	for (int i = 0; i < MAX_SNAKE_LENGTH; i++)
 	{
-		snake[i].position = { SQUARE_SIZE , SQUARE_SIZE };
+		snake[i].position = { 0 , 0 };
 		snake[i].speed = { SQUARE_SIZE, 0 };
-
 		snake[i].color = SNAKE_COLOR;
+		snakePreviousPosition[i] = { 0.0f, 0.0f };
 	}
 
-	for (int i = 0; i < MAX_SNAKE_LENGTH; i++)
+	// init initial snake position
+	for (int i = 0; i < snakeLength; i++)
 	{
-		snakePreviousPosition[i] = { 0.0f, 0.0f };
+		snake[i].position = { SNAKE_STARTING_POSITION.x - i, SNAKE_STARTING_POSITION.y - i };
 	}
 
 	fruit.color = BLACK;
@@ -184,6 +188,7 @@ void UpdateSnake()
 			{
 				snake[0].position.x += snake[0].speed.x;
 				snake[0].position.y += snake[0].speed.y;
+				canSnakeMove = true;
 			}
 			else // move snake body
 			{
@@ -204,22 +209,30 @@ void HandleInput()
 	}
 	else
 	{
-		if (IsKeyPressed(KEY_RIGHT) && snake[0].speed.x == 0)
+		if (canSnakeMove)
 		{
-			snake[0].speed = { SQUARE_SIZE, 0 };
+			if (IsKeyPressed(KEY_RIGHT) && snake[0].speed.x == 0)
+			{
+				snake[0].speed = { SQUARE_SIZE, 0 };
+				canSnakeMove = false;
+			}
+			else if (IsKeyPressed(KEY_LEFT) && snake[0].speed.x == 0)
+			{
+				snake[0].speed = { -SQUARE_SIZE, 0 };
+				canSnakeMove = false;
+			}
+			else if (IsKeyPressed(KEY_DOWN) && snake[0].speed.y == 0)
+			{
+				snake[0].speed = { 0, SQUARE_SIZE };
+				canSnakeMove = false;
+			}
+			else if (IsKeyPressed(KEY_UP) && snake[0].speed.y == 0)
+			{
+				snake[0].speed = { 0, -SQUARE_SIZE };
+				canSnakeMove = false;
+			}
 		}
-		if (IsKeyPressed(KEY_LEFT) && snake[0].speed.x == 0)
-		{
-			snake[0].speed = { -SQUARE_SIZE, 0 };
-		}
-		if (IsKeyPressed(KEY_DOWN) && snake[0].speed.y == 0)
-		{
-			snake[0].speed = { 0, SQUARE_SIZE };
-		}
-		if (IsKeyPressed(KEY_UP) && snake[0].speed.y == 0)
-		{
-			snake[0].speed = { 0, -SQUARE_SIZE };
-		}
+
 	}
 }
 
