@@ -233,8 +233,8 @@ void SpawnFood()
 	while (shouldSpawnFood)
 	{
 		fruit.position = {
-			float(GetRandomValue(0, ((SCREEN_WIDTH - SQUARE_SIZE - 2 * WALL_OFFSET) / SQUARE_SIZE)) * SQUARE_SIZE),
-			float(GetRandomValue(0, ((SCREEN_HEIGHT - SQUARE_SIZE - 2 * WALL_OFFSET) / SQUARE_SIZE)) * SQUARE_SIZE)
+			float(GetRandomValue(WALL_OFFSET, ((SCREEN_WIDTH - SQUARE_SIZE - 2 * WALL_OFFSET) / SQUARE_SIZE)) * SQUARE_SIZE),
+			float(GetRandomValue(WALL_OFFSET, ((SCREEN_HEIGHT - SQUARE_SIZE - 2 * WALL_OFFSET) / SQUARE_SIZE)) * SQUARE_SIZE)
 		};
 
 		shouldSpawnFood = false;
