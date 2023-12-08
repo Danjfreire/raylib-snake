@@ -180,10 +180,10 @@ void DrawGame()
 
 void UpdateGame()
 {
-	HandleCollision();
-	SpawnFood();
 	HandleInput();
 	UpdateSnake();
+	HandleCollision();
+	SpawnFood();
 }
 
 void UpdateSnake()
